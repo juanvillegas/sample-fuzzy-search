@@ -1,0 +1,9 @@
+{
+  "bail": true,
+  "exit": true,
+  "watch": true,
+  "watch-ignore": "node-modules/**",
+  "extension": ["ts"],
+  "spec": "test/**/*.test.ts",
+  "require": "ts-node/register"
+}
