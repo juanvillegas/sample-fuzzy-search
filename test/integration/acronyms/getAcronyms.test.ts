@@ -118,18 +118,18 @@ describe('get acronyms', async function () {
 
             let response = await request(App).get(`${endpoint}?from=0&limit=5`);
             assert.isString(response.headers.link);
-            let nextRequest = response.headers.link;
-            assert.equal(nextRequest, '/acronym?limit=5&from=5');
+            assert.equal(response.headers.link, '/acronym?limit=5&from=5; rel="next"');
+            let nextRequest = response.headers.link.split(';')[0];
 
             response = await request(App).get(nextRequest);
             assert.isString(response.headers.link);
-            nextRequest = response.headers.link;
-            assert.equal(nextRequest, '/acronym?limit=5&from=10');
+            assert.equal(response.headers.link, '/acronym?limit=5&from=10; rel="next"');
+            nextRequest = response.headers.link.split(';')[0];
 
             response = await request(App).get(nextRequest);
             assert.isString(response.headers.link);
-            nextRequest = response.headers.link;
-            assert.equal(nextRequest, '/acronym?limit=5&from=15');
+            assert.equal(response.headers.link, '/acronym?limit=5&from=15; rel="next"');
+            nextRequest = response.headers.link.split(';')[0];
 
             response = await request(App).get(nextRequest);
             assert.isUndefined(response.headers.link); // because we reach the last element

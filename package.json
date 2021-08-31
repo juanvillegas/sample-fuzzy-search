@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "NODE_ENV=test mocha",
-    "dev": "PORT=7777 NODE_ENV=dev node_modules/.bin/ts-node src/bin/server.ts"
+    "dev": "NODE_ENV=dev node_modules/.bin/ts-node src/bin/server.ts"
   },
   "author": {
     "name": "Juan Manuel Villegas",

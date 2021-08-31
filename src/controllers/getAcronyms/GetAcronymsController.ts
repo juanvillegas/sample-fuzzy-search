@@ -19,7 +19,7 @@ class GetAcronymsController extends Controller {
         const retrieveResult = await this.acronymsService.retrieveAcronyms(data);
 
         if (retrieveResult.hasMore) {
-            this.res.setHeader('Link', `/acronym?limit=${data.limit}&from=${getNextFrom(data.limit, data.from)}`);
+            this.res.setHeader('Link', `/acronym?limit=${data.limit}&from=${getNextFrom(data.limit, data.from)}; rel="next"`);
         }
 
         return retrieveResult.entries;

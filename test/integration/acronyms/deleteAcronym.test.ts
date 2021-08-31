@@ -14,9 +14,10 @@ describe('delete acronyms', async function () {
     it('should delete an acronym when given a `value` that exists in the database', async function () {
         await repository.create({ value: 'exists', definition: 'def' });
 
-        await makeDeleteRequest(App, '/exists').expect(200);
+        const response = await makeDeleteRequest(App, '/exists').expect(200);
 
         assert.equal(repository.size(), 0);
+        assert.isEmpty(response.body);
     });
 
     it('should throw an error if the given `value` doesnt exist', async function () {

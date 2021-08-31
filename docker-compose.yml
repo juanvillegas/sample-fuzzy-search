@@ -2,4 +2,6 @@ services:
   api:
     build: .
     ports:
-      - "7777:7777"
+      - "$PORT:$PORT"
+    environment:
+      - PORT=${PORT}
