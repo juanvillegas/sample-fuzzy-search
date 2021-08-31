@@ -14,7 +14,7 @@ abstract class Controller {
     async execute() {
         await this.validate();
 
-        const data = await this.getData();
+        const data = await this.getRequestData();
 
         const result = await this.handle(data);
 
@@ -31,7 +31,7 @@ abstract class Controller {
 
     abstract doValidation(): Promise<void>;
 
-    getData() : object {
+    getRequestData() : object {
         return {};
     }
 
