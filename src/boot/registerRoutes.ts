@@ -9,6 +9,11 @@ function registerRoutes(app : Express) {
 
     router(app);
 
+    app.all('*', function(req, res){
+        res.status(404);
+        res.send('');
+    });
+
 }
 
 export default registerRoutes;

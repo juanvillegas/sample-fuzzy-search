@@ -198,6 +198,8 @@ Content-Type: application/json
 
 Updates an existing Acronym.
 
+**Note: when providing a :value through the URL, make sure to URL-encode the values before.**
+
 **Request**
 
 Content-Type header of the request must be set to 'application/json'.
