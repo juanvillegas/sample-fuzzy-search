@@ -19,7 +19,7 @@ export default function checkAuthorizationHeader(header: string) {
         throw new AuthorizationError('Invalid authorization details provided.');
     }
 
-    let buffer = new Buffer(inputDetails, 'base64');
+    let buffer = Buffer.from(inputDetails, 'base64');
     let data = buffer.toString('ascii');
     let [username, password] = data.split(':');
 

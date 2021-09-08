@@ -13,6 +13,7 @@ describe('put acronyms', async function () {
     beforeEach(function () {
         repository = ServiceProvider.singleton('AcronymRepository');
         repository.clear();
+        console.log(authHeader);
     });
 
     describe('Authorization header', function () {
