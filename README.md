@@ -3,11 +3,9 @@
 ## Index
 
 - [Installation & Execution](#installation)
-- [Design notes & considerations](#design-notes--considerations)
+- [Design notes & considerations](#design-notes)
 - [API](#api)
 - [Tests](#tests)
-
-## Design notes
 
 ## Installation
 
@@ -20,11 +18,17 @@ Then, start the server using:
 `PORT=$PORT npm run dev`
 
 where $PORT is a number and represents the port where the API server will be listening for connections. Make sure this 
-port is not used by other Applications. 
+port is not used by other Applications. $PORT is mandatory, however a default `.env` file has been defined where PORT 
+is assigned the default value 8888.
 
 `npm run dev` will run the API using `ts-node` to compile the typescript code in runtime.
 
 If successful, the API will be available at `http://localhost:$PORT`.
+
+### Is it running?
+
+There is a heartbeat endpoint to quickly verify that the API is up and running. Trigger a GET request to `/ping`, and 
+the API will respond with `pong` if everything is working correctly.
 
 ### Using composer
 
@@ -35,6 +39,19 @@ To do so, ensure Docker is running in the host machine and then execute the foll
 
 where `$PORT` is the desired port number you want to use to access the API. Once `docker-compose` has finished,
 the API will be available at `http://localhost:$PORT`.
+
+## Design notes
+
+Some design decisions that are worth mentioning:
+- Abstract parent controller: this Class was introduced in order to define a common path to handle 
+all the different requests in a predictable way. Using this parent controller as a base class, child controllers only 
+need to redefine the required methods.
+- Service Provider: a custom and very simple Service Provider function was introduced to be able to inject dependencies 
+into controllers and services.
+- Repository: to keep things simple, Acronyms are loaded from a file into an InMemoryRepository on startup. 
+This basically means two things: 
+  - all acronyms are stored in memory, and thus it is not suitable for really big collections.
+  - when the server is restarted, the Acronym repository is also reloaded and thus any changes will be lost.
 
 ## API
 

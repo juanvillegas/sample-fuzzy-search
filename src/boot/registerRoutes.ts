@@ -3,7 +3,7 @@ import router from '../controllers/routes';
 
 function registerRoutes(app : Express) {
 
-    app.get('/ping', async (req: Request, res: Response, next: Function) => {
+    app.get('/ping', (req: Request, res: Response, next: Function) => {
         res.send('pong!');
     });
 
