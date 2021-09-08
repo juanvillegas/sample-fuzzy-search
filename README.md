@@ -53,6 +53,16 @@ This basically means two things:
   - all acronyms are stored in memory, and thus it is not suitable for really big collections.
   - when the server is restarted, the Acronym repository is also reloaded and thus any changes will be lost.
 
+A high level overview of the system would look like this:
+
+![acronyms](https://user-images.githubusercontent.com/773149/132495506-a285436d-4c6f-4bbd-858e-e02bae37ec12.jpg)
+
+where requests flow from left to right, accessing through defined routes (`controllers/routes`). Routes execute middleware and ultimately delegate to a Controller
+(see `controllers/getAcronyms/GetAcronymsController` for an example). Controllers follow a set of steps before processing the request, most importantly grabbing the request data and validating it (see `controllers/getAcronyms/GetAcronymsData` and `controllers/getAcronyms/GetAcronymsValidator` for examples). The controller will then delegate to a Service to handle the internal logic of dealing with Acronyms (`AcronymService`). Finally, the Service handles all the complex logic,
+using a Repository (`/modules/acronym/repositories/`) to retrieve Acronym instances.
+The Service Provider is a singleton that is available throughout the request providing concrete instance of Objects as needed.
+
+
 ## API
 
 This section describes the available API endpoints, what parameters are supported and shows examples for using each of 
