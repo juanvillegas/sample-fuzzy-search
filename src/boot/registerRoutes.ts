@@ -11,7 +11,9 @@ function registerRoutes(app : Express) {
 
     app.all('*', function(req, res){
         res.status(404);
-        res.send('');
+        res.send({
+            error: 'not_found_error'
+        });
     });
 
 }
