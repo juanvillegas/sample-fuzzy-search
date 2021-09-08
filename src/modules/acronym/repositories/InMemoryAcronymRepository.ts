@@ -2,9 +2,8 @@ import Acronym from '../types/Acronym';
 import AcronymRepository from './AcronymRepository';
 import * as fs from 'fs';
 import NotFoundError from '../../errors/NotFoundError';
-// import NotFoundError from '../../errors/NotFoundError';
 
-class FilesystemAcronymRepository implements AcronymRepository {
+class InMemoryAcronymRepository implements AcronymRepository {
 
     private database: Array<Acronym>;
 
@@ -31,14 +30,14 @@ class FilesystemAcronymRepository implements AcronymRepository {
             }
         });
 
-        return new FilesystemAcronymRepository(acronyms);
+        return new InMemoryAcronymRepository(acronyms);
     }
 
     async create(acronym: Acronym): Promise<void> {
         this.database.push(acronym);
     }
 
-    async delete(value: string): Promise<boolean> {
+    delete(value: string): boolean {
         const beforeSize = this.size();
         this.database = this.database.filter(e => e.value !== value);
 
@@ -49,11 +48,11 @@ class FilesystemAcronymRepository implements AcronymRepository {
         return false;
     }
 
-    findOne(value: string): Promise<Acronym | null> {
-        return Promise.resolve(null);
+    findAll(): Acronym[] {
+        return this.database;
     }
 
-    async retrieveByValue(value: string): Promise<Acronym | null> {
+    findByValue(value: string): Acronym | null {
         const entry = this.database.find(e => e.value === value);
 
         if (!entry) {
@@ -63,16 +62,8 @@ class FilesystemAcronymRepository implements AcronymRepository {
         return entry;
     }
 
-    async retrieveByFuzzySearch(value: string): Promise<Acronym[]> {
-        const entries = this.database.filter(e => {
-            return e.value.includes(value) || e.definition.includes(value);
-        });
-
-        return entries;
-    }
-
-    async update(value: string, acronym: Acronym): Promise<null> {
-        const entry = await this.retrieveByValue(value);
+    update(value: string, acronym: Acronym): null {
+        const entry = this.findByValue(value);
 
         if (entry === null) {
             throw new NotFoundError();
@@ -83,6 +74,10 @@ class FilesystemAcronymRepository implements AcronymRepository {
         return null;
     }
 
+    clear(): void {
+        this.database = [];
+    }
+
 }
 
-export default FilesystemAcronymRepository;
+export default InMemoryAcronymRepository;

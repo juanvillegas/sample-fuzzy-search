@@ -1,5 +1,5 @@
 import {Request} from 'express';
-import RequestValidator from '../RequestValidator';
+import RequestValidator from '../../modules/routing/RequestValidator';
 
 class PutAcronymsValidator extends RequestValidator {
 

@@ -7,8 +7,9 @@ describe('delete acronyms', async function () {
 
     let repository: any;
 
-    beforeEach(function () {
+    beforeEach(async function () {
         repository = ServiceProvider.singleton('AcronymRepository');
+        await repository.clear();
     });
 
     it('should delete an acronym when given a `value` that exists in the database', async function () {

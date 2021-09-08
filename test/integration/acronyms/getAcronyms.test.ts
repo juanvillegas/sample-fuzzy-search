@@ -9,8 +9,9 @@ describe('get acronyms', async function () {
     let repository: any;
     let endpoint = '/acronym';
 
-    beforeEach(function () {
+    beforeEach(async function () {
         repository = ServiceProvider.singleton('AcronymRepository');
+        await repository.clear();
     });
 
     it('Should use default parameters', function () {
@@ -29,7 +30,7 @@ describe('get acronyms', async function () {
 
     describe('When provided a search parameter', function () {
 
-       it('should return results matching `search` doing a fuzzy search', async function () {
+       it('should return results matching `fuz` doing a fuzzy search', async function () {
            await repository.create({ value: 'fuz', definition: 'test' });
            await repository.create({ value: 'fuzzy', definition: 'test1' });
            await repository.create({ value: 'fuzzyto', definition: 'test2' });
@@ -40,7 +41,7 @@ describe('get acronyms', async function () {
            assert.equal(response.body.length, 3);
        });
 
-       it('should return results matching `search` doing a fuzzy search', async function () {
+       it('should return results matching `fuzz` doing a fuzzy search', async function () {
            await repository.create({ value: 'fuz', definition: 'test' });
            await repository.create({ value: 'fuzzy', definition: 'test1' });
            await repository.create({ value: 'fuzzyto', definition: 'test2' });
@@ -51,7 +52,7 @@ describe('get acronyms', async function () {
            assert.equal(response.body.length, 2);
        });
 
-       it('should return results matching `search` doing a fuzzy search', async function () {
+       it('should return results matching `zzy` doing a fuzzy search', async function () {
            await repository.create({ value: 'fuz', definition: 'test' });
            await repository.create({ value: 'fuzzy', definition: 'test1' });
            await repository.create({ value: 'fuzzyto', definition: 'test2' });
@@ -62,7 +63,7 @@ describe('get acronyms', async function () {
            assert.equal(response.body.length, 2);
        });
 
-       it('should return results matching `search` doing a fuzzy search (II)', async function () {
+       it('should return results matching `zyta` doing a fuzzy search (II)', async function () {
            await repository.create({ value: 'fuz', definition: 'test' });
            await repository.create({ value: 'fuzzy', definition: 'test1' });
            await repository.create({ value: 'fuzzyto', definition: 'test2' });
@@ -76,20 +77,26 @@ describe('get acronyms', async function () {
 
     describe('When provided a limit parameter', function () {
 
-        it('should return a maximum of `limit` entries', async function () {
+        beforeEach(async function () {
             await repository.create({ value: 'a', definition: 'test' });
             await repository.create({ value: 'a', definition: 'test2' });
             await repository.create({ value: 'a', definition: 'test3' });
+        });
 
-            const limits = [1, 3];
+        it('should return a maximum of 1 entries', async function () {
+            const response = await request(App).get(`${endpoint}?limit=1`);
 
-            for (let limit of limits) {
-                const response = await request(App).get(`${endpoint}?limit=${limit}`);
+            assert.isArray(response.body);
+            assert.equal(response.body.length, 1);
+            assert.equal(response.body[0].value, 'a');
+        });
 
-                assert.isArray(response.body);
-                assert.equal(response.body.length, limit);
-                assert.equal(response.body[0].value, 'a');
-            }
+        it('should return a maximum of 2 entries', async function () {
+            const response = await request(App).get(`${endpoint}?limit=2`);
+
+            assert.isArray(response.body);
+            assert.equal(response.body.length, 2);
+            assert.equal(response.body[0].value, 'a');
         });
 
     });

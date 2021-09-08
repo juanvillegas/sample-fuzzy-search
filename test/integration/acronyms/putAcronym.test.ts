@@ -12,6 +12,7 @@ describe('put acronyms', async function () {
 
     beforeEach(function () {
         repository = ServiceProvider.singleton('AcronymRepository');
+        repository.clear();
     });
 
     describe('Authorization header', function () {
@@ -60,7 +61,7 @@ describe('put acronyms', async function () {
 
         assert.equal(repository.size(), 1);
 
-        const found = await repository.retrieveByValue('exists');
+        const found = await repository.findByValue('exists');
         assert.equal(found.definition, 'def_v2');
     });
 

@@ -6,58 +6,60 @@ import ValidationError from '../../errors/ValidationError';
 import PutAcronymsData from '../../../controllers/putAcronyms/PutAcronymsData';
 import NotFoundError from '../../errors/NotFoundError';
 import RetrieveResult from '../types/RetrieveResult';
+import {AcronymSearcher} from './AcronymSearcher/AcronymSearcher';
 
 class AcronymsService {
 
-    // @ts-ignore
     private repository: AcronymRepository;
+    private acronymSearcher: AcronymSearcher;
 
-    constructor(repository: AcronymRepository) {
+    constructor(repository: AcronymRepository, acronymSearcher: AcronymSearcher) {
         this.repository = repository;
+        this.acronymSearcher = acronymSearcher;
     }
 
     async retrieveAcronyms(data: GetAcronymsData): Promise<RetrieveResult<Acronym>> {
-        let entries: Acronym[] = [];
+        let entries: Acronym[] = this.repository.findAll();
         let hasMore = false;
 
-        if (data.search !== null) {
-            entries = await this.repository.retrieveByFuzzySearch(data.search);
+        if (data.search !== '') {
+            entries = await this.acronymSearcher.search(data.search, entries, {});
+        }
 
-            if (data.from) {
-                entries = entries.slice(data.from);
-            }
+        if (data.from) {
+            entries = entries.slice(data.from);
+        }
 
-            if (data.limit && entries.length > data.limit) {
-                entries = entries.slice(0, data.limit);
-                hasMore = true;
-            }
+        if (data.limit && entries.length > data.limit) {
+            entries = entries.slice(0, data.limit);
+            hasMore = true;
         }
 
         return { entries, hasMore };
     }
 
-    async createAcronym(data: PostAcronymsData): Promise<void> {
-        const exists = await this.repository.retrieveByValue(data.value);
+    createAcronym(data: PostAcronymsData): void {
+        const exists = this.repository.findByValue(data.value);
 
         if (exists) {
             throw new ValidationError('Resource already exists', 'resource_already_exists');
         }
 
-        await this.repository.create({
+        this.repository.create({
             value: data.value,
             definition: data.definition
         });
     }
 
     async updateAcronym(data: PutAcronymsData) {
-        await this.repository.update(data.value, {
+        this.repository.update(data.value, {
             value: data.value,
             definition: data.definition
         });
     }
 
-    async deleteAcronym(value: string) {
-        const deleted = await this.repository.delete(value);
+    deleteAcronym(value: string) {
+        const deleted = this.repository.delete(value);
 
         if (!deleted) {
             throw new NotFoundError();

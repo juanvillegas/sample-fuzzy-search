@@ -1,4 +1,4 @@
-import Controller from '../Controller';
+import Controller from '../../modules/routing/Controller';
 import {Request, Response} from 'express';
 import AcronymsService from '../../modules/acronym/services/AcronymsService';
 import DeleteAcronymsData from './DeleteAcronymsData';
@@ -28,7 +28,7 @@ class DeleteAcronymsController extends Controller {
     }
 
     async doValidation(): Promise<void> {
-        return new DeleteAcronymsValidator().validate(this.req);
+        return await new DeleteAcronymsValidator().validate(this.req);
     }
 
 }

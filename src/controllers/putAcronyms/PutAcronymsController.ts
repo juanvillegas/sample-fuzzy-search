@@ -1,4 +1,4 @@
-import Controller from '../Controller';
+import Controller from '../../modules/routing/Controller';
 import {Request, Response} from 'express';
 import AcronymsService from '../../modules/acronym/services/AcronymsService';
 import PutAcronymsData from './PutAcronymsData';
@@ -29,7 +29,7 @@ class PutAcronymsController extends Controller {
     }
 
     async doValidation(): Promise<void> {
-        return new PutAcronymsValidator().validate(this.req);
+        return await new PutAcronymsValidator().validate(this.req);
     }
 
 }

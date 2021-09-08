@@ -1,10 +1,9 @@
-import Controller from '../Controller';
+import Controller from '../../modules/routing/Controller';
 import {Request, Response} from 'express';
 import GetAcronymsData from './GetAcronymsData';
 import Acronym from '../../modules/acronym/types/Acronym';
 import AcronymsService from '../../modules/acronym/services/AcronymsService';
 import GetAcronymsValidator from './GetAcronymsValidator';
-import getNextFrom from '../../helpers/getNextFrom';
 
 class GetAcronymsController extends Controller {
 
@@ -19,7 +18,7 @@ class GetAcronymsController extends Controller {
         const retrieveResult = await this.acronymsService.retrieveAcronyms(data);
 
         if (retrieveResult.hasMore) {
-            this.res.setHeader('Link', `/acronym?limit=${data.limit}&from=${getNextFrom(data.limit, data.from)}; rel="next"`);
+            this.res.setHeader('Link', `/acronym?limit=${data.limit}&from=${data.limit + data.from}; rel="next"`);
         }
 
         return retrieveResult.entries;
@@ -34,7 +33,7 @@ class GetAcronymsController extends Controller {
     }
 
     async doValidation(): Promise<void> {
-        return new GetAcronymsValidator().validate(this.req);
+        return await new GetAcronymsValidator().validate(this.req);
     }
 
 }
